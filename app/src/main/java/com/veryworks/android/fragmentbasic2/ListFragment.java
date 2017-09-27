@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ListFragment extends Fragment {
     Context context;
-
+    Callback callback;
     public ListFragment() {
         // Required empty public constructor
     }
@@ -28,6 +28,9 @@ public class ListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        if(context instanceof Callback){
+            callback = (Callback) context;
+        }
     }
 
     @Override
@@ -47,9 +50,13 @@ public class ListFragment extends Fragment {
         for(int i=0 ; i<100 ; i++){
             data.add("temptData "+i);
         }
-        adapter = new CustomAdapter(context, data);
+        adapter = new CustomAdapter(context, callback, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+    public interface Callback {
+        public void goDetail(String value);
     }
 
 }

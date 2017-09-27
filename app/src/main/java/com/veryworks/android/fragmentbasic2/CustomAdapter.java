@@ -13,11 +13,13 @@ import java.util.List;
  * Created by pc on 9/27/2017.
  */
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
+public class CustomAdapter extends RecyclerView.Adapter<Holder>{
     Context context;
+    ListFragment.Callback callback;
     List<String> data;
-    public CustomAdapter(Context context, List<String> data){
+    public CustomAdapter(Context context, ListFragment.Callback callback, List<String> data){
         this.context = context;
+        this.callback = callback;
         this.data = data;
     }
 
@@ -25,7 +27,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_list, parent, false);
-        return new Holder(view);
+        return new Holder(view, callback);
     }
 
     @Override
@@ -38,14 +40,21 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
         return data.size();
     }
 
-    class Holder extends RecyclerView.ViewHolder{
-        private TextView textView;
-        public Holder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.textView);
-        }
-        public void setText(String text){
-            textView.setText(text);
-        }
+}
+
+class Holder extends RecyclerView.ViewHolder{
+    private TextView textView;
+    public Holder(View itemView, final ListFragment.Callback callback) {
+        super(itemView);
+        textView = itemView.findViewById(R.id.textView);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.goDetail(textView.getText().toString());
+            }
+        });
+    }
+    public void setText(String text){
+        textView.setText(text);
     }
 }
